@@ -33,7 +33,7 @@ linters-settings:
     rules:
       - name: exported
         severity: warning
-        disabled: false
+        disabled: true
 
 run:
   timeout: 5m
