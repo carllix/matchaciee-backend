@@ -1,0 +1,53 @@
+linters:
+  enable:
+    - errcheck      # Checks for unchecked errors
+    - gosimple      # Simplify code
+    - govet         # Reports suspicious constructs
+    - ineffassign   # Detects ineffectual assignments
+    - staticcheck   # Advanced Go linter
+    - unused        # Checks for unused code
+    - gofmt         # Checks if code is formatted
+    - goimports     # Checks import formatting
+    - misspell      # Spelling mistakes
+    - revive        # Fast, configurable, extensible linter
+    - gosec         # Security checks
+    - bodyclose     # Checks HTTP response body is closed
+    - noctx         # Finds sending http request without context.Context
+    - sqlclosecheck # Checks sql.Rows and sql.Stmt are closed
+
+  disable:
+    - exhaustruct   # Too strict for development
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  govet:
+    enable-all: true
+
+  gofmt:
+    simplify: true
+
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gosec
+        - errcheck

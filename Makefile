@@ -63,6 +63,15 @@ deps:
 	@echo "Downloading dependencies..."
 	@go mod download
 
+# Lint code
+lint:
+	@echo "Running linter..."
+	@golangci-lint run ./...
+
+# CI checks (what CI runs)
+ci: lint vet test
+	@echo "CI checks passed!"
+
 # Install development tools
 install-tools:
 	@echo "Installing development tools..."
@@ -70,3 +79,24 @@ install-tools:
 	@go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@echo "Tools installed successfully"
+
+# Docker commands
+docker-dev-up:
+	@echo "Starting development database..."
+	@docker-compose -f docker-compose.dev.yml up -d
+
+docker-dev-down:
+	@echo "Stopping development database..."
+	@docker-compose -f docker-compose.dev.yml down
+
+docker-dev-logs:
+	@echo "Showing database logs..."
+	@docker-compose -f docker-compose.dev.yml logs -f
+
+docker-prod-up:
+	@echo "Starting production services..."
+	@docker-compose --env-file .env.production up -d --build
+
+docker-prod-down:
+	@echo "Stopping production services..."
+	@docker-compose --env-file .env.production down
