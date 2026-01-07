@@ -13,6 +13,13 @@ help:
 	@echo "  make test            - Run tests"
 	@echo "  make clean           - Remove build artifacts"
 	@echo ""
+	@echo "Code Quality:"
+	@echo "  make fmt             - Format code"
+	@echo "  make fix-align       - Fix field alignment for better memory usage"
+	@echo "  make vet             - Run go vet"
+	@echo "  make lint            - Run linter"
+	@echo "  make ci              - Run all CI checks (lint, vet, test)"
+	@echo ""
 	@echo "Database Migrations:"
 	@echo "  make migrate-up      - Run all pending migrations"
 	@echo "  make migrate-down    - Rollback the last migration"
@@ -58,6 +65,11 @@ clean:
 fmt:
 	@echo "Formatting code..."
 	@go fmt ./...
+
+# Fix field alignment
+fix-align:
+	@echo "Fixing field alignment..."
+	@fieldalignment -fix ./...
 
 # Vet code
 vet:
