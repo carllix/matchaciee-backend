@@ -70,7 +70,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 }
 
 func (h *AuthHandler) GetMe(c *fiber.Ctx) error {
-	// Get user UUID from context 
+	// Get user UUID from context
 	userUUID := c.Locals("userUUID")
 	if userUUID == nil {
 		return utils.ErrorResponse(c, fiber.StatusUnauthorized, "Unauthorized")

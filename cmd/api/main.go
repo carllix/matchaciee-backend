@@ -5,10 +5,16 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/carllix/matchaciee-backend/internal/config"
 	"github.com/carllix/matchaciee-backend/internal/database"
+	"github.com/carllix/matchaciee-backend/internal/handlers"
+	"github.com/carllix/matchaciee-backend/internal/repositories"
+	"github.com/carllix/matchaciee-backend/internal/routes"
+	"github.com/carllix/matchaciee-backend/internal/services"
+	"github.com/carllix/matchaciee-backend/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -74,7 +80,22 @@ func main() {
 		})
 	})
 
-	// API routes
+	// Initialize dependencies
+	db := database.GetDB()
+	jwtUtil := utils.NewJWTUtil(cfg.JWTSecret, cfg.JWTExpiry, cfg.RefreshTokenExpiry)
+
+	// Initialize repositories
+	userRepo := repositories.NewUserRepository(db)
+	refreshTokenRepo := repositories.NewRefreshTokenRepository(db)
+
+	// Initialize services
+	authService := services.NewAuthService(userRepo, refreshTokenRepo, jwtUtil)
+
+	// Initialize handlers
+	authHandler := handlers.NewAuthHandler(authService)
+
+	// Setup routes
+	routes.SetupAuthRoutes(app, authHandler, jwtUtil)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
@@ -116,12 +137,5 @@ func errorHandler(c *fiber.Ctx, err error) error {
 }
 
 func joinOrigins(origins []string) string {
-	result := ""
-	for i, origin := range origins {
-		if i > 0 {
-			result += ", "
-		}
-		result += origin
-	}
-	return result
+	return strings.Join(origins, ", ")
 }
