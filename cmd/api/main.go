@@ -1,44 +1,127 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/carllix/matchaciee-backend/internal/config"
+	"github.com/carllix/matchaciee-backend/internal/database"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func main() {
-	app := fiber.New()
+	// Load configuration
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatalf("Failed to load configuration: %v", err)
+	}
 
+	log.Printf("Starting %s in %s mode...", cfg.AppName, cfg.Env)
+
+	// Connect to database
+	if err := database.Connect(cfg); err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	defer func() {
+		if err := database.Close(); err != nil {
+			log.Printf("Error closing database: %v", err)
+		}
+	}()
+
+	// Initialize app
+	app := fiber.New(fiber.Config{
+		AppName:      cfg.AppName,
+		ErrorHandler: errorHandler,
+	})
+
+	// Global middleware
+	app.Use(recover.New())
+	app.Use(logger.New(logger.Config{
+		Format: "[${time}] ${status} - ${latency} ${method} ${path}\n",
+	}))
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: joinOrigins(cfg.AllowedOrigins),
+		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+		AllowMethods: "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+	}))
+
+	// Health check endpoint
 	app.Get("/health", func(c *fiber.Ctx) error {
+		dbConnected := database.IsConnected()
+		status := "ok"
+		if !dbConnected {
+			status = "degraded"
+		}
+
 		return c.JSON(fiber.Map{
-			"status":  "ok",
-			"service": "matchaciee-api",
+			"status":   status,
+			"service":  cfg.AppName,
+			"database": dbConnected,
 		})
 	})
 
+	// Root endpoint
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+		return c.JSON(fiber.Map{
+			"message": "Welcome to Matchaciee API",
+			"version": "v1.0.0",
+		})
 	})
 
+	// API routes
+
+	// Start server
+	addr := fmt.Sprintf(":%s", cfg.AppPort)
+	log.Printf("Server listening on port %s", cfg.AppPort)
+
 	// Channel to listen for interrupt signals
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
 	// Start server in a goroutine
 	go func() {
-		if err := app.Listen(":8080"); err != nil {
-			log.Panic(err)
+		if err := app.Listen(addr); err != nil {
+			log.Fatalf("Failed to start server: %v", err)
 		}
 	}()
 
 	// Block until we receive a signal
-	<-c
+	<-quit
 	log.Println("Gracefully shutting down...")
 	if err := app.Shutdown(); err != nil {
 		log.Printf("Error during shutdown: %v", err)
 	}
 	log.Println("Server stopped")
+}
+
+func errorHandler(c *fiber.Ctx, err error) error {
+	code := fiber.StatusInternalServerError
+	message := "Internal Server Error"
+
+	if e, ok := err.(*fiber.Error); ok {
+		code = e.Code
+		message = e.Message
+	}
+
+	return c.Status(code).JSON(fiber.Map{
+		"success": false,
+		"error":   message,
+	})
+}
+
+func joinOrigins(origins []string) string {
+	result := ""
+	for i, origin := range origins {
+		if i > 0 {
+			result += ", "
+		}
+		result += origin
+	}
+	return result
 }
