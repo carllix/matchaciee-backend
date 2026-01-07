@@ -1,4 +1,4 @@
-.PHONY: help run build test clean dev
+.PHONY: help run build test clean dev migrate-up migrate-down migrate-create migrate-version migrate-drop migrate-force
 
 # Variables
 APP_NAME=matchaciee-api
@@ -7,11 +7,22 @@ MAIN_PATH=cmd/api/main.go
 
 help:
 	@echo "Available commands:"
-	@echo "  make run          - Run the application"
-	@echo "  make dev          - Run with hot reload"
-	@echo "  make build        - Build the application"
-	@echo "  make test         - Run tests"
-	@echo "  make clean        - Remove build artifacts"
+	@echo "  make run             - Run the application"
+	@echo "  make dev             - Run with hot reload"
+	@echo "  make build           - Build the application"
+	@echo "  make test            - Run tests"
+	@echo "  make clean           - Remove build artifacts"
+	@echo ""
+	@echo "Database Migrations:"
+	@echo "  make migrate-up      - Run all pending migrations"
+	@echo "  make migrate-down    - Rollback the last migration"
+	@echo "  make migrate-version - Show current migration version"
+	@echo "  make migrate-create  - Create new migration (use name=<migration_name>)"
+	@echo "  make migrate-drop    - Drop all tables (dangerous!)"
+	@echo ""
+	@echo "Docker:"
+	@echo "  make docker-dev-up   - Start development database"
+	@echo "  make docker-dev-down - Stop development database"
 
 # Run the application
 run:
@@ -100,3 +111,34 @@ docker-prod-up:
 docker-prod-down:
 	@echo "Stopping production services..."
 	@docker-compose --env-file .env.production down
+
+# Database Migration commands
+migrate-up:
+	@echo "Running database migrations..."
+	@./scripts/migrate.sh up
+
+migrate-down:
+	@echo "Rolling back last migration..."
+	@./scripts/migrate.sh down
+
+migrate-version:
+	@./scripts/migrate.sh version
+
+migrate-create:
+	@if [ -z "$(name)" ]; then \
+		echo "Error: Please specify migration name"; \
+		echo "Usage: make migrate-create name=<migration_name>"; \
+		exit 1; \
+	fi
+	@./scripts/migrate.sh create $(name)
+
+migrate-drop:
+	@./scripts/migrate.sh drop
+
+migrate-force:
+	@if [ -z "$(version)" ]; then \
+		echo "Error: Please specify version number"; \
+		echo "Usage: make migrate-force version=<version>"; \
+		exit 1; \
+	fi
+	@./scripts/migrate.sh force $(version)
