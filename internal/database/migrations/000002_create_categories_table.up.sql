@@ -1,6 +1,7 @@
--- Create categories table
+-- Create categories table with hybrid ID approach
 CREATE TABLE IF NOT EXISTS categories (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id SERIAL PRIMARY KEY,
+    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 -- Create indexes
+CREATE INDEX IF NOT EXISTS idx_categories_uuid ON categories(uuid);
 CREATE INDEX IF NOT EXISTS idx_categories_slug ON categories(slug);
 CREATE INDEX IF NOT EXISTS idx_categories_active ON categories(is_active);
 CREATE INDEX IF NOT EXISTS idx_categories_display_order ON categories(display_order);

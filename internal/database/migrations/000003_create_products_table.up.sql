@@ -1,7 +1,8 @@
--- Create products table
+-- Create products table with hybrid ID approach
 CREATE TABLE IF NOT EXISTS products (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
+    id SERIAL PRIMARY KEY,
+    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+    category_id INT REFERENCES categories(id) ON DELETE SET NULL,
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
@@ -17,6 +18,7 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 -- Create indexes
+CREATE INDEX IF NOT EXISTS idx_products_uuid ON products(uuid);
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
 CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
 CREATE INDEX IF NOT EXISTS idx_products_available ON products(is_available);

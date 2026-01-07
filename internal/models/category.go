@@ -13,8 +13,9 @@ type Category struct {
 	ImageURL     *string   `gorm:"type:varchar(255)" json:"image_url,omitempty"`
 	Name         string    `gorm:"type:varchar(100);not null" json:"name"`
 	Slug         string    `gorm:"type:varchar(100);uniqueIndex;not null" json:"slug"`
+	ID           uint      `gorm:"primaryKey;autoIncrement" json:"-"`
 	DisplayOrder int       `gorm:"default:0" json:"display_order"`
-	ID           uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
+	UUID         uuid.UUID `gorm:"type:uuid;uniqueIndex;not null;default:gen_random_uuid()" json:"id"`
 	IsActive     bool      `gorm:"default:true" json:"is_active"`
 }
 
