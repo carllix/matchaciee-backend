@@ -17,6 +17,7 @@ type ProductRepository interface {
 	Create(product *models.Product) error
 	FindByID(id uint) (*models.Product, error)
 	FindByUUID(uuid uuid.UUID) (*models.Product, error)
+	FindByUUIDIncludingDeleted(uuid uuid.UUID) (*models.Product, error)
 	FindBySlug(slug string) (*models.Product, error)
 	FindAll(includeDeleted bool, isAvailable *bool, categoryID *uint) ([]models.Product, error)
 	FindByCategoryUUID(categoryUUID uuid.UUID, includeDeleted bool, isAvailable *bool) ([]models.Product, error)
@@ -27,6 +28,7 @@ type ProductRepository interface {
 	ExistsBySlug(slug string) (bool, error)
 
 	CreateCustomization(customization *models.ProductCustomization) error
+	FindCustomizationByUUID(uuid uuid.UUID) (*models.ProductCustomization, error)
 	UpdateCustomization(customization *models.ProductCustomization) error
 	DeleteCustomization(id uint) error
 	FindCustomizationsByProductID(productID uint) ([]models.ProductCustomization, error)
@@ -79,6 +81,26 @@ func (r *productRepository) FindByUUID(uuid uuid.UUID) (*models.Product, error) 
 			return db.Order("display_order ASC")
 		}).
 		Where("uuid = ? AND deleted_at IS NULL", uuid).
+		First(&product).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrProductNotFound
+		}
+		return nil, err
+	}
+	return &product, nil
+}
+
+func (r *productRepository) FindByUUIDIncludingDeleted(uuid uuid.UUID) (*models.Product, error) {
+	var product models.Product
+	err := r.db.
+		Unscoped(). // Include soft-deleted records
+		Preload("Category").
+		Preload("Customizations", func(db *gorm.DB) *gorm.DB {
+			return db.Order("display_order ASC")
+		}).
+		Where("uuid = ?", uuid).
 		First(&product).Error
 
 	if err != nil {
@@ -179,6 +201,18 @@ func (r *productRepository) ExistsBySlug(slug string) (bool, error) {
 
 func (r *productRepository) CreateCustomization(customization *models.ProductCustomization) error {
 	return r.db.Create(customization).Error
+}
+
+func (r *productRepository) FindCustomizationByUUID(uuid uuid.UUID) (*models.ProductCustomization, error) {
+	var customization models.ProductCustomization
+	err := r.db.Where("uuid = ?", uuid).First(&customization).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("customization not found")
+		}
+		return nil, err
+	}
+	return &customization, nil
 }
 
 func (r *productRepository) UpdateCustomization(customization *models.ProductCustomization) error {
