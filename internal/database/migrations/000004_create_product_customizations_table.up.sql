@@ -1,7 +1,8 @@
--- Create product_customizations table
+-- Create product_customizations table with hybrid ID approach
 CREATE TABLE IF NOT EXISTS product_customizations (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+    product_id INT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     customization_type VARCHAR(50) NOT NULL,
     option_name VARCHAR(100) NOT NULL,
     price_modifier DECIMAL(10,2) DEFAULT 0 CHECK (price_modifier >= -999999.99 AND price_modifier <= 999999.99),
@@ -10,6 +11,7 @@ CREATE TABLE IF NOT EXISTS product_customizations (
 );
 
 -- Create indexes
+CREATE INDEX IF NOT EXISTS idx_customizations_uuid ON product_customizations(uuid);
 CREATE INDEX IF NOT EXISTS idx_customizations_product ON product_customizations(product_id);
 CREATE INDEX IF NOT EXISTS idx_customizations_type ON product_customizations(customization_type);
 

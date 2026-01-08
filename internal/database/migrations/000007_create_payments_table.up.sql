@@ -1,7 +1,8 @@
--- Create payments table
+-- Create payments table with hybrid ID approach
 CREATE TABLE IF NOT EXISTS payments (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+    order_id INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     midtrans_order_id VARCHAR(100) UNIQUE NOT NULL,
     payment_type VARCHAR(50),
     gross_amount DECIMAL(10,2) NOT NULL CHECK (gross_amount >= 0),
@@ -17,6 +18,7 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 -- Create indexes
+CREATE INDEX IF NOT EXISTS idx_payments_uuid ON payments(uuid);
 CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(order_id);
 CREATE INDEX IF NOT EXISTS idx_payments_midtrans_order ON payments(midtrans_order_id);
 CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(transaction_status);

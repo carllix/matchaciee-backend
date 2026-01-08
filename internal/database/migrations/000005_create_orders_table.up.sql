@@ -1,8 +1,9 @@
--- Create orders table
+-- Create orders table with hybrid ID approach
 CREATE TABLE IF NOT EXISTS orders (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id SERIAL PRIMARY KEY,
+    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
     order_number VARCHAR(20) UNIQUE NOT NULL,
-    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    user_id INT REFERENCES users(id) ON DELETE SET NULL,
     customer_name VARCHAR(255) NOT NULL,
     order_source VARCHAR(20) NOT NULL CHECK (order_source IN ('guest', 'member', 'kiosk')),
     status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'preparing', 'ready', 'completed', 'cancelled')),
@@ -17,6 +18,7 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 -- Create indexes
+CREATE INDEX IF NOT EXISTS idx_orders_uuid ON orders(uuid);
 CREATE INDEX IF NOT EXISTS idx_orders_number ON orders(order_number);
 CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);

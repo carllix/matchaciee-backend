@@ -1,8 +1,9 @@
--- Create order_items table
+-- Create order_items table with hybrid ID approach
 CREATE TABLE IF NOT EXISTS order_items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-    product_id UUID REFERENCES products(id) ON DELETE SET NULL,
+    id SERIAL PRIMARY KEY,
+    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+    order_id INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    product_id INT REFERENCES products(id) ON DELETE SET NULL,
     product_name VARCHAR(255) NOT NULL,
     quantity INT NOT NULL DEFAULT 1 CHECK (quantity > 0),
     unit_price DECIMAL(10,2) NOT NULL CHECK (unit_price >= 0),
@@ -13,6 +14,7 @@ CREATE TABLE IF NOT EXISTS order_items (
 );
 
 -- Create indexes
+CREATE INDEX IF NOT EXISTS idx_order_items_uuid ON order_items(uuid);
 CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
 CREATE INDEX IF NOT EXISTS idx_order_items_product ON order_items(product_id);
 CREATE INDEX IF NOT EXISTS idx_order_items_customizations ON order_items USING GIN (customizations);

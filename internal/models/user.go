@@ -23,7 +23,8 @@ type User struct {
 	Password  string    `gorm:"type:varchar(255);not null" json:"-"`
 	FullName  string    `gorm:"type:varchar(255);not null" json:"full_name"`
 	Role      UserRole  `gorm:"type:varchar(20);not null" json:"role"`
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
+	ID        uint      `gorm:"primaryKey;autoIncrement" json:"-"`
+	UUID      uuid.UUID `gorm:"type:uuid;uniqueIndex;not null;default:gen_random_uuid()" json:"id"`
 	IsActive  bool      `gorm:"default:true" json:"is_active"`
 }
 
