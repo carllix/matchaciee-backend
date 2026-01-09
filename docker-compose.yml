@@ -45,12 +45,19 @@ services:
       # JWT
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRY: ${JWT_EXPIRY}
+      REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY}
 
       # CORS
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
 
       # Logging
       LOG_LEVEL: ${LOG_LEVEL}
+
+      # Midtrans
+      MIDTRANS_SERVER_KEY: ${MIDTRANS_SERVER_KEY}
+      MIDTRANS_CLIENT_KEY: ${MIDTRANS_CLIENT_KEY}
+      MIDTRANS_ENVIRONMENT: ${MIDTRANS_ENVIRONMENT}
+
     depends_on:
       postgres:
         condition: service_healthy
