@@ -21,7 +21,11 @@ func (m *MockOrderRepository) FindByID(id uint) (*models.Order, error) {
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*models.Order), args.Error(1)
+	order, ok := args.Get(0).(*models.Order)
+	if !ok {
+		return nil, args.Error(1)
+	}
+	return order, args.Error(1)
 }
 
 func (m *MockOrderRepository) FindByUUID(orderUUID uuid.UUID) (*models.Order, error) {
@@ -29,7 +33,11 @@ func (m *MockOrderRepository) FindByUUID(orderUUID uuid.UUID) (*models.Order, er
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*models.Order), args.Error(1)
+	order, ok := args.Get(0).(*models.Order)
+	if !ok {
+		return nil, args.Error(1)
+	}
+	return order, args.Error(1)
 }
 
 func (m *MockOrderRepository) FindByOrderNumber(orderNumber string) (*models.Order, error) {
@@ -37,7 +45,11 @@ func (m *MockOrderRepository) FindByOrderNumber(orderNumber string) (*models.Ord
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*models.Order), args.Error(1)
+	order, ok := args.Get(0).(*models.Order)
+	if !ok {
+		return nil, args.Error(1)
+	}
+	return order, args.Error(1)
 }
 
 func (m *MockOrderRepository) FindByUserID(userID uint, limit, offset int) ([]models.Order, int64, error) {
@@ -45,7 +57,15 @@ func (m *MockOrderRepository) FindByUserID(userID uint, limit, offset int) ([]mo
 	if args.Get(0) == nil {
 		return nil, 0, args.Error(2)
 	}
-	return args.Get(0).([]models.Order), args.Get(1).(int64), args.Error(2)
+	orders, ok := args.Get(0).([]models.Order)
+	if !ok {
+		return nil, 0, args.Error(2)
+	}
+	count, ok := args.Get(1).(int64)
+	if !ok {
+		return nil, 0, args.Error(2)
+	}
+	return orders, count, args.Error(2)
 }
 
 func (m *MockOrderRepository) FindAll(filters repositories.OrderFilters, limit, offset int) ([]models.Order, int64, error) {
@@ -53,7 +73,15 @@ func (m *MockOrderRepository) FindAll(filters repositories.OrderFilters, limit, 
 	if args.Get(0) == nil {
 		return nil, 0, args.Error(2)
 	}
-	return args.Get(0).([]models.Order), args.Get(1).(int64), args.Error(2)
+	orders, ok := args.Get(0).([]models.Order)
+	if !ok {
+		return nil, 0, args.Error(2)
+	}
+	count, ok := args.Get(1).(int64)
+	if !ok {
+		return nil, 0, args.Error(2)
+	}
+	return orders, count, args.Error(2)
 }
 
 func (m *MockOrderRepository) UpdateStatus(orderID uint, status models.OrderStatus) error {
