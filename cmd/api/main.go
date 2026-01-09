@@ -89,20 +89,24 @@ func main() {
 	refreshTokenRepo := repositories.NewRefreshTokenRepository(db)
 	categoryRepo := repositories.NewCategoryRepository(db)
 	productRepo := repositories.NewProductRepository(db)
+	orderRepo := repositories.NewOrderRepository(db)
 
 	// Initialize services
 	authService := services.NewAuthService(userRepo, refreshTokenRepo, jwtUtil)
 	categoryService := services.NewCategoryService(categoryRepo)
 	productService := services.NewProductService(productRepo, categoryRepo)
+	orderService := services.NewOrderService(orderRepo, productRepo, userRepo)
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	productHandler := handlers.NewProductHandler(productService)
+	orderHandler := handlers.NewOrderHandler(orderService)
 
 	// Setup routes
 	routes.SetupAuthRoutes(app, authHandler, jwtUtil)
 	routes.SetupProductRoutes(app, categoryHandler, productHandler, jwtUtil)
+	routes.SetupOrderRoutes(app, orderHandler, jwtUtil)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
