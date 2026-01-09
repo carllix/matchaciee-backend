@@ -28,9 +28,9 @@ type LoginRequest struct {
 }
 
 type AuthResponse struct {
+	User         UserResponse `json:"user"`
 	Token        string       `json:"token"`
 	RefreshToken string       `json:"refresh_token"`
-	User         UserResponse `json:"user"`
 }
 
 type RefreshTokenRequest struct {
@@ -38,11 +38,11 @@ type RefreshTokenRequest struct {
 }
 
 type UserResponse struct {
-	Phone    *string         `json:"phone,omitempty"`
+	ID       uuid.UUID       `json:"id"`
 	Email    string          `json:"email"`
 	FullName string          `json:"full_name"`
+	Phone    *string         `json:"phone,omitempty"`
 	Role     models.UserRole `json:"role"`
-	ID       uuid.UUID       `json:"id"`
 }
 
 type AuthService interface {

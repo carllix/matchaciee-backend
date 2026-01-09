@@ -27,22 +27,22 @@ const (
 )
 
 type Payment struct {
-	CreatedAt         time.Time          `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt         time.Time          `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	ID                uint               `gorm:"primaryKey;autoIncrement" json:"-"`
+	UUID              uuid.UUID          `gorm:"type:uuid;uniqueIndex;not null;default:gen_random_uuid()" json:"id"`
+	OrderID           uint               `gorm:"not null;index" json:"-"`
+	MidtransOrderID   string             `gorm:"type:varchar(100);uniqueIndex;not null" json:"midtrans_order_id"`
+	GrossAmount       float64            `gorm:"type:decimal(10,2);not null" json:"gross_amount"`
+	PaymentType       *string            `gorm:"type:varchar(50)" json:"payment_type,omitempty"`
+	TransactionID     *string            `gorm:"type:varchar(100)" json:"transaction_id,omitempty"`
+	TransactionStatus *TransactionStatus `gorm:"type:varchar(50);index" json:"transaction_status,omitempty"`
 	TransactionTime   *time.Time         `json:"transaction_time,omitempty"`
 	SettlementTime    *time.Time         `json:"settlement_time,omitempty"`
-	PaymentType       *string            `gorm:"type:varchar(50)" json:"payment_type,omitempty"`
-	Order             *Order             `gorm:"foreignKey:OrderID;references:ID;constraint:OnDelete:CASCADE" json:"order,omitempty"`
-	TransactionStatus *TransactionStatus `gorm:"type:varchar(50);index" json:"transaction_status,omitempty"`
-	TransactionID     *string            `gorm:"type:varchar(100)" json:"transaction_id,omitempty"`
-	StatusMessage     *string            `gorm:"type:text" json:"status_message,omitempty"`
 	FraudStatus       *FraudStatus       `gorm:"type:varchar(50)" json:"fraud_status,omitempty"`
-	MidtransOrderID   string             `gorm:"type:varchar(100);uniqueIndex;not null" json:"midtrans_order_id"`
+	StatusMessage     *string            `gorm:"type:text" json:"status_message,omitempty"`
 	PaymentMetadata   datatypes.JSON     `gorm:"type:jsonb" json:"payment_metadata,omitempty"`
-	ID                uint               `gorm:"primaryKey;autoIncrement" json:"-"`
-	OrderID           uint               `gorm:"not null;index" json:"-"`
-	GrossAmount       float64            `gorm:"type:decimal(10,2);not null" json:"gross_amount"`
-	UUID              uuid.UUID          `gorm:"type:uuid;uniqueIndex;not null;default:gen_random_uuid()" json:"id"`
+	Order             *Order             `gorm:"foreignKey:OrderID;references:ID;constraint:OnDelete:CASCADE" json:"order,omitempty"`
+	CreatedAt         time.Time          `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt         time.Time          `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
 func (Payment) TableName() string {
