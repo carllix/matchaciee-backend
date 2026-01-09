@@ -90,23 +90,33 @@ func main() {
 	categoryRepo := repositories.NewCategoryRepository(db)
 	productRepo := repositories.NewProductRepository(db)
 	orderRepo := repositories.NewOrderRepository(db)
+	paymentRepo := repositories.NewPaymentRepository(db)
 
 	// Initialize services
 	authService := services.NewAuthService(userRepo, refreshTokenRepo, jwtUtil)
 	categoryService := services.NewCategoryService(categoryRepo)
 	productService := services.NewProductService(productRepo, categoryRepo)
 	orderService := services.NewOrderService(orderRepo, productRepo, userRepo)
+	paymentService := services.NewPaymentService(
+		paymentRepo,
+		orderRepo,
+		cfg.MidtransServerKey,
+		cfg.MidtransClientKey,
+		cfg.MidtransEnvironment,
+	)
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	productHandler := handlers.NewProductHandler(productService)
 	orderHandler := handlers.NewOrderHandler(orderService)
+	paymentHandler := handlers.NewPaymentHandler(paymentService)
 
 	// Setup routes
 	routes.SetupAuthRoutes(app, authHandler, jwtUtil)
 	routes.SetupProductRoutes(app, categoryHandler, productHandler, jwtUtil)
 	routes.SetupOrderRoutes(app, orderHandler, jwtUtil)
+	routes.SetupPaymentRoutes(app, paymentHandler)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
