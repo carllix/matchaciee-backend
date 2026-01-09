@@ -15,12 +15,12 @@ var (
 )
 
 type CreateCategoryRequest struct {
-	Description  *string `json:"description,omitempty"`
-	ImageURL     *string `json:"image_url,omitempty" validate:"omitempty,url"`
-	IsActive     *bool   `json:"is_active,omitempty"`
 	Name         string  `json:"name" validate:"required,min=2,max=100"`
 	Slug         string  `json:"slug,omitempty" validate:"omitempty,min=2,max=100"`
+	Description  *string `json:"description,omitempty"`
 	DisplayOrder int     `json:"display_order,omitempty"`
+	IsActive     *bool   `json:"is_active,omitempty"`
+	ImageURL     *string `json:"image_url,omitempty" validate:"omitempty,url"`
 }
 
 type UpdateCategoryRequest struct {
@@ -33,15 +33,15 @@ type UpdateCategoryRequest struct {
 }
 
 type CategoryResponse struct {
-	Description  *string   `json:"description,omitempty"`
-	ImageURL     *string   `json:"image_url,omitempty"`
+	ID           uuid.UUID `json:"id"`
 	Name         string    `json:"name"`
 	Slug         string    `json:"slug"`
+	Description  *string   `json:"description,omitempty"`
+	ImageURL     *string   `json:"image_url,omitempty"`
+	DisplayOrder int       `json:"display_order"`
+	IsActive     bool      `json:"is_active"`
 	CreatedAt    string    `json:"created_at"`
 	UpdatedAt    string    `json:"updated_at"`
-	DisplayOrder int       `json:"display_order"`
-	ID           uuid.UUID `json:"id"`
-	IsActive     bool      `json:"is_active"`
 }
 
 type CategoryService interface {

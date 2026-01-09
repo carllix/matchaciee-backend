@@ -64,8 +64,8 @@ type OrderItemResponse struct {
 	Quantity       int            `json:"quantity"`
 	UnitPrice      float64        `json:"unit_price"`
 	Subtotal       float64        `json:"subtotal"`
-	Notes          *string        `json:"notes,omitempty"`
 	Customizations datatypes.JSON `json:"customizations,omitempty"`
+	Notes          *string        `json:"notes,omitempty"`
 }
 
 type UserSummary struct {

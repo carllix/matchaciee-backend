@@ -14,20 +14,18 @@ var (
 	ErrProductSlugExists = errors.New("product slug already exists")
 )
 
-// Request/Response DTOs
-
 type CreateProductRequest struct {
-	Description     *string                      `json:"description,omitempty"`
-	CategoryUUID    *uuid.UUID                   `json:"category_id,omitempty"`
-	ImageURL        *string                      `json:"image_url,omitempty" validate:"omitempty,url"`
-	IsAvailable     *bool                        `json:"is_available,omitempty"`
-	IsCustomizable  *bool                        `json:"is_customizable,omitempty"`
-	PreparationTime *int                         `json:"preparation_time,omitempty" validate:"omitempty,gt=0"`
 	Name            string                       `json:"name" validate:"required,min=2,max=255"`
 	Slug            string                       `json:"slug,omitempty" validate:"omitempty,min=2,max=255"`
-	Customizations  []CreateCustomizationRequest `json:"customizations,omitempty"`
+	Description     *string                      `json:"description,omitempty"`
+	CategoryUUID    *uuid.UUID                   `json:"category_id,omitempty"`
 	BasePrice       float64                      `json:"base_price" validate:"required,gt=0"`
+	PreparationTime *int                         `json:"preparation_time,omitempty" validate:"omitempty,gt=0"`
 	DisplayOrder    int                          `json:"display_order,omitempty"`
+	IsAvailable     *bool                        `json:"is_available,omitempty"`
+	IsCustomizable  *bool                        `json:"is_customizable,omitempty"`
+	ImageURL        *string                      `json:"image_url,omitempty" validate:"omitempty,url"`
+	Customizations  []CreateCustomizationRequest `json:"customizations,omitempty"`
 }
 
 type UpdateProductRequest struct {
@@ -58,30 +56,30 @@ type UpdateCustomizationRequest struct {
 }
 
 type ProductResponse struct {
-	ImageURL        *string                 `json:"image_url,omitempty"`
-	Description     *string                 `json:"description,omitempty"`
-	DeletedAt       *string                 `json:"deleted_at,omitempty"`
-	Category        *CategoryResponse       `json:"category,omitempty"`
-	Slug            string                  `json:"slug"`
-	Name            string                  `json:"name"`
-	UpdatedAt       string                  `json:"updated_at"`
-	CreatedAt       string                  `json:"created_at"`
-	Customizations  []CustomizationResponse `json:"customizations,omitempty"`
-	DisplayOrder    int                     `json:"display_order"`
-	PreparationTime int                     `json:"preparation_time"`
-	BasePrice       float64                 `json:"base_price"`
 	ID              uuid.UUID               `json:"id"`
+	Name            string                  `json:"name"`
+	Slug            string                  `json:"slug"`
+	Description     *string                 `json:"description,omitempty"`
+	Category        *CategoryResponse       `json:"category,omitempty"`
+	BasePrice       float64                 `json:"base_price"`
+	PreparationTime int                     `json:"preparation_time"`
+	DisplayOrder    int                     `json:"display_order"`
 	IsAvailable     bool                    `json:"is_available"`
 	IsCustomizable  bool                    `json:"is_customizable"`
+	ImageURL        *string                 `json:"image_url,omitempty"`
+	DeletedAt       *string                 `json:"deleted_at,omitempty"`
+	Customizations  []CustomizationResponse `json:"customizations,omitempty"`
+	CreatedAt       string                  `json:"created_at"`
+	UpdatedAt       string                  `json:"updated_at"`
 }
 
 type CustomizationResponse struct {
+	ID                uuid.UUID `json:"id"`
 	CustomizationType string    `json:"customization_type"`
 	OptionName        string    `json:"option_name"`
-	CreatedAt         string    `json:"created_at"`
 	PriceModifier     float64   `json:"price_modifier"`
 	DisplayOrder      int       `json:"display_order"`
-	ID                uuid.UUID `json:"id"`
+	CreatedAt         string    `json:"created_at"`
 }
 
 type ProductService interface {
