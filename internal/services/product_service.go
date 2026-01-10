@@ -87,7 +87,6 @@ type ProductService interface {
 	GetByUUID(uuid uuid.UUID) (*ProductResponse, error)
 	GetBySlug(slug string) (*ProductResponse, error)
 	GetAll(includeDeleted bool, availableOnly bool, categoryUUID *uuid.UUID) ([]ProductResponse, error)
-	GetByCategoryUUID(categoryUUID uuid.UUID, availableOnly bool) ([]ProductResponse, error)
 	Update(uuid uuid.UUID, req UpdateProductRequest) (*ProductResponse, error)
 	SoftDelete(uuid uuid.UUID) error
 	Restore(uuid uuid.UUID) error
@@ -244,29 +243,6 @@ func (s *productService) GetAll(includeDeleted bool, availableOnly bool, categor
 
 	products, err := s.productRepo.FindAll(includeDeleted, isAvailable, categoryID)
 	if err != nil {
-		return nil, err
-	}
-
-	responses := make([]ProductResponse, len(products))
-	for i, product := range products {
-		responses[i] = *s.toProductResponse(&product)
-	}
-
-	return responses, nil
-}
-
-func (s *productService) GetByCategoryUUID(categoryUUID uuid.UUID, availableOnly bool) ([]ProductResponse, error) {
-	var isAvailable *bool
-	if availableOnly {
-		available := true
-		isAvailable = &available
-	}
-
-	products, err := s.productRepo.FindByCategoryUUID(categoryUUID, false, isAvailable)
-	if err != nil {
-		if errors.Is(err, repositories.ErrCategoryNotFound) {
-			return nil, ErrCategoryNotFound
-		}
 		return nil, err
 	}
 

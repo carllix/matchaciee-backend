@@ -214,44 +214,6 @@ func TestProductService_GetAll(t *testing.T) {
 	})
 }
 
-func TestProductService_GetByCategoryUUID(t *testing.T) {
-	t.Run("success", func(t *testing.T) {
-		mockProductRepo := new(mocks.MockProductRepository)
-		mockCategoryRepo := new(mocks.MockCategoryRepository)
-		service := services.NewProductService(mockProductRepo, mockCategoryRepo)
-
-		categoryUUID := uuid.New()
-		products := []models.Product{
-			{ID: 1, UUID: uuid.New(), Name: "Product 1", Slug: "product-1", BasePrice: 10000, CreatedAt: time.Now(), UpdatedAt: time.Now()},
-		}
-
-		mockProductRepo.On("FindByCategoryUUID", categoryUUID, false, (*bool)(nil)).Return(products, nil)
-
-		result, err := service.GetByCategoryUUID(categoryUUID, false)
-
-		assert.NoError(t, err)
-		assert.NotNil(t, result)
-		assert.Len(t, result, 1)
-		mockProductRepo.AssertExpectations(t)
-	})
-
-	t.Run("error - category not found", func(t *testing.T) {
-		mockProductRepo := new(mocks.MockProductRepository)
-		mockCategoryRepo := new(mocks.MockCategoryRepository)
-		service := services.NewProductService(mockProductRepo, mockCategoryRepo)
-
-		categoryUUID := uuid.New()
-		mockProductRepo.On("FindByCategoryUUID", categoryUUID, false, (*bool)(nil)).Return(nil, repositories.ErrCategoryNotFound)
-
-		result, err := service.GetByCategoryUUID(categoryUUID, false)
-
-		assert.Error(t, err)
-		assert.Nil(t, result)
-		assert.Equal(t, services.ErrCategoryNotFound, err)
-		mockProductRepo.AssertExpectations(t)
-	})
-}
-
 func TestProductService_Update(t *testing.T) {
 	t.Run("success - update name and price", func(t *testing.T) {
 		mockProductRepo := new(mocks.MockProductRepository)

@@ -87,6 +87,4 @@ func SetupProductRoutes(
 		middleware.RoleMiddleware(models.RoleAdmin),
 		productHandler.DeleteProductCustomization,
 	)
-
-	categories.Get("/:categoryId/products", productHandler.GetProductsByCategory)
 }
