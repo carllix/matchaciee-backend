@@ -111,31 +111,6 @@ func (h *ProductHandler) GetAllProducts(c *fiber.Ctx) error {
 	})
 }
 
-// GET /api/v1/categories/:categoryId/products
-func (h *ProductHandler) GetProductsByCategory(c *fiber.Ctx) error {
-	categoryParam := c.Params("categoryId")
-
-	categoryUUID, err := uuid.Parse(categoryParam)
-	if err != nil {
-		return utils.ErrorResponse(c, fiber.StatusBadRequest, "Invalid category ID format")
-	}
-
-	availableOnly := c.QueryBool("available_only", false)
-
-	products, err := h.productService.GetByCategoryUUID(categoryUUID, availableOnly)
-	if err != nil {
-		if errors.Is(err, services.ErrCategoryNotFound) {
-			return utils.ErrorResponse(c, fiber.StatusNotFound, "Category not found")
-		}
-		return utils.ErrorResponse(c, fiber.StatusInternalServerError, "Failed to get products")
-	}
-
-	return utils.SuccessResponse(c, fiber.StatusOK, fiber.Map{
-		"products": products,
-		"count":    len(products),
-	})
-}
-
 // PUT /api/v1/products/:id
 func (h *ProductHandler) UpdateProduct(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -247,6 +222,9 @@ func (h *ProductHandler) AddProductCustomization(c *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, services.ErrProductNotFound) {
 			return utils.ErrorResponse(c, fiber.StatusNotFound, "Product not found")
+		}
+		if errors.Is(err, services.ErrProductNotCustomizable) {
+			return utils.ErrorResponse(c, fiber.StatusBadRequest, "Product is not customizable")
 		}
 		return utils.ErrorResponse(c, fiber.StatusInternalServerError, "Failed to add customization")
 	}

@@ -87,7 +87,6 @@ type ProductService interface {
 	GetByUUID(uuid uuid.UUID) (*ProductResponse, error)
 	GetBySlug(slug string) (*ProductResponse, error)
 	GetAll(includeDeleted bool, availableOnly bool, categoryUUID *uuid.UUID) ([]ProductResponse, error)
-	GetByCategoryUUID(categoryUUID uuid.UUID, availableOnly bool) ([]ProductResponse, error)
 	Update(uuid uuid.UUID, req UpdateProductRequest) (*ProductResponse, error)
 	SoftDelete(uuid uuid.UUID) error
 	Restore(uuid uuid.UUID) error
@@ -255,29 +254,6 @@ func (s *productService) GetAll(includeDeleted bool, availableOnly bool, categor
 	return responses, nil
 }
 
-func (s *productService) GetByCategoryUUID(categoryUUID uuid.UUID, availableOnly bool) ([]ProductResponse, error) {
-	var isAvailable *bool
-	if availableOnly {
-		available := true
-		isAvailable = &available
-	}
-
-	products, err := s.productRepo.FindByCategoryUUID(categoryUUID, false, isAvailable)
-	if err != nil {
-		if errors.Is(err, repositories.ErrCategoryNotFound) {
-			return nil, ErrCategoryNotFound
-		}
-		return nil, err
-	}
-
-	responses := make([]ProductResponse, len(products))
-	for i, product := range products {
-		responses[i] = *s.toProductResponse(&product)
-	}
-
-	return responses, nil
-}
-
 func (s *productService) Update(productUUID uuid.UUID, req UpdateProductRequest) (*ProductResponse, error) {
 	// Find existing product
 	product, err := s.productRepo.FindByUUID(productUUID)
@@ -399,6 +375,10 @@ func (s *productService) AddCustomization(productUUID uuid.UUID, req CreateCusto
 			return nil, ErrProductNotFound
 		}
 		return nil, err
+	}
+
+	if !product.IsCustomizable {
+		return nil, ErrProductNotCustomizable
 	}
 
 	customization := &models.ProductCustomization{

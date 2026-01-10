@@ -9,6 +9,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gosimple/slug v1.15.0
 	github.com/joho/godotenv v1.5.1
+	github.com/midtrans/midtrans-go v1.3.8
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/crypto v0.46.0
 	gorm.io/datatypes v1.2.7

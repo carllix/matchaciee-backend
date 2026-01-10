@@ -10,40 +10,46 @@ import (
 )
 
 type Config struct {
-	DBPort             string
-	AppPort            string
-	Env                string
-	AppName            string
-	DBHost             string
-	DBUser             string
-	DBPassword         string
-	DBName             string
-	DBSSLMode          string
-	JWTSecret          string
-	LogLevel           string
-	AllowedOrigins     []string
-	JWTExpiry          time.Duration
-	RefreshTokenExpiry time.Duration
+	DBPort              string
+	AppPort             string
+	Env                 string
+	AppName             string
+	DBHost              string
+	DBUser              string
+	DBPassword          string
+	DBName              string
+	DBSSLMode           string
+	JWTSecret           string
+	LogLevel            string
+	AllowedOrigins      []string
+	JWTExpiry           time.Duration
+	RefreshTokenExpiry  time.Duration
+	MidtransServerKey   string
+	MidtransClientKey   string
+	MidtransEnvironment string
 }
 
 func Load() (*Config, error) {
 	_ = godotenv.Load() //nolint:errcheck
 
 	cfg := &Config{
-		AppPort:            getEnv("PORT", "8080"),
-		Env:                getEnv("ENV", "development"),
-		AppName:            getEnv("APP_NAME", "Matchaciee API"),
-		DBHost:             getEnv("DB_HOST", "localhost"),
-		DBPort:             getEnv("DB_PORT", "5432"),
-		DBUser:             getEnv("DB_USER", "postgres"),
-		DBPassword:         getEnv("DB_PASSWORD", ""),
-		DBName:             getEnv("DB_NAME", "matchaciee_dev"),
-		DBSSLMode:          getEnv("DB_SSLMODE", "disable"),
-		JWTSecret:          getEnv("JWT_SECRET", "rahasiamatcha"),
-		JWTExpiry:          getEnvAsDuration("JWT_EXPIRY", 1*time.Hour),
-		RefreshTokenExpiry: getEnvAsDuration("REFRESH_TOKEN_EXPIRY", 7*24*time.Hour),
-		AllowedOrigins:     getEnvAsSlice("ALLOWED_ORIGINS", []string{"http://localhost:3000"}),
-		LogLevel:           getEnv("LOG_LEVEL", "info"),
+		AppPort:             getEnv("PORT", "8080"),
+		Env:                 getEnv("ENV", "development"),
+		AppName:             getEnv("APP_NAME", "Matchaciee API"),
+		DBHost:              getEnv("DB_HOST", "localhost"),
+		DBPort:              getEnv("DB_PORT", "5432"),
+		DBUser:              getEnv("DB_USER", "postgres"),
+		DBPassword:          getEnv("DB_PASSWORD", ""),
+		DBName:              getEnv("DB_NAME", "matchaciee_dev"),
+		DBSSLMode:           getEnv("DB_SSLMODE", "disable"),
+		JWTSecret:           getEnv("JWT_SECRET", "rahasiamatcha"),
+		JWTExpiry:           getEnvAsDuration("JWT_EXPIRY", 1*time.Hour),
+		RefreshTokenExpiry:  getEnvAsDuration("REFRESH_TOKEN_EXPIRY", 7*24*time.Hour),
+		AllowedOrigins:      getEnvAsSlice("ALLOWED_ORIGINS", []string{"http://localhost:3000"}),
+		LogLevel:            getEnv("LOG_LEVEL", "info"),
+		MidtransServerKey:   getEnv("MIDTRANS_SERVER_KEY", ""),
+		MidtransClientKey:   getEnv("MIDTRANS_CLIENT_KEY", ""),
+		MidtransEnvironment: getEnv("MIDTRANS_ENVIRONMENT", "sandbox"),
 	}
 
 	if err := cfg.Validate(); err != nil {
@@ -64,6 +70,21 @@ func (c *Config) Validate() error {
 
 	if c.DBPassword == "" && c.Env == "production" {
 		return fmt.Errorf("DB_PASSWORD is required in production")
+	}
+
+	// Validate Midtrans configuration in production
+	if c.Env == "production" {
+		if c.MidtransServerKey == "" {
+			return fmt.Errorf("MIDTRANS_SERVER_KEY is required in production")
+		}
+		if c.MidtransClientKey == "" {
+			return fmt.Errorf("MIDTRANS_CLIENT_KEY is required in production")
+		}
+	}
+
+	// Validate Midtrans environment value
+	if c.MidtransEnvironment != "sandbox" && c.MidtransEnvironment != "production" {
+		return fmt.Errorf("MIDTRANS_ENVIRONMENT must be either 'sandbox' or 'production'")
 	}
 
 	return nil
