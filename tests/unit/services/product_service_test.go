@@ -388,9 +388,10 @@ func TestProductService_AddCustomization(t *testing.T) {
 
 		productUUID := uuid.New()
 		product := &models.Product{
-			ID:   1,
-			UUID: productUUID,
-			Name: "Product",
+			ID:             1,
+			UUID:           productUUID,
+			Name:           "Product",
+			IsCustomizable: true,
 		}
 
 		req := services.CreateCustomizationRequest{
