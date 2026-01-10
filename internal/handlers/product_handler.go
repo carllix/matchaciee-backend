@@ -223,6 +223,9 @@ func (h *ProductHandler) AddProductCustomization(c *fiber.Ctx) error {
 		if errors.Is(err, services.ErrProductNotFound) {
 			return utils.ErrorResponse(c, fiber.StatusNotFound, "Product not found")
 		}
+		if errors.Is(err, services.ErrProductNotCustomizable) {
+			return utils.ErrorResponse(c, fiber.StatusBadRequest, "Product is not customizable")
+		}
 		return utils.ErrorResponse(c, fiber.StatusInternalServerError, "Failed to add customization")
 	}
 

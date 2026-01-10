@@ -377,6 +377,10 @@ func (s *productService) AddCustomization(productUUID uuid.UUID, req CreateCusto
 		return nil, err
 	}
 
+	if !product.IsCustomizable {
+		return nil, ErrProductNotCustomizable
+	}
+
 	customization := &models.ProductCustomization{
 		ProductID:         product.ID,
 		CustomizationType: req.CustomizationType,
