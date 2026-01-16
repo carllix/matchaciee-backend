@@ -1,0 +1,2824 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Matchaciee Backend API",
+        "title": "Matchaciee API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Authenticate user with email and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "description": "Login credentials",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "$ref": "#/definitions/docs.AuthSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid email or password",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "User account is inactive",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "description": "Invalidate the refresh token to logout the user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "parameters": [
+                    {
+                        "description": "Refresh token to invalidate",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.LogoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.MessageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid refresh token",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get the authenticated user's profile information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get current user profile",
+                "responses": {
+                    "200": {
+                        "description": "User profile retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.MeSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "description": "Get a new access token using a valid refresh token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh access token",
+                "parameters": [
+                    {
+                        "description": "Refresh token",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.RefreshTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.AuthSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid or expired refresh token",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "User account is inactive",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Register a new user account with email and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "Registration details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.AuthSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Email already exists",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "get": {
+                "description": "Get a list of all categories with optional filtering",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all categories",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Filter to show only active categories",
+                        "name": "active_only",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categories retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.CategoriesSuccessResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new product category (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Create a new category",
+                "parameters": [
+                    {
+                        "description": "Category details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.CreateCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Category created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.CategorySuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Category slug already exists",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/slug/{slug}": {
+            "get": {
+                "description": "Get a single category by its URL-friendly slug",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get category by slug",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.CategorySuccessResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "description": "Get a single category by its UUID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get category by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.CategorySuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid category ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing category by its UUID (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update a category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Category update details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.UpdateCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.CategorySuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error or invalid ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Category slug already exists",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a category by its UUID (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete a category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category deleted successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.MessageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid category ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a paginated list of all orders with optional filtering. Admin/Barista only.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get all orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Items per page (max 100)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "pending",
+                            "preparing",
+                            "ready",
+                            "completed",
+                            "cancelled"
+                        ],
+                        "type": "string",
+                        "description": "Filter by order status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "guest",
+                            "member",
+                            "kiosk"
+                        ],
+                        "type": "string",
+                        "description": "Filter by order source",
+                        "name": "source",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Orders retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.OrdersSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin/Barista only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new order for an authenticated member user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create an order (authenticated)",
+                "parameters": [
+                    {
+                        "description": "Order details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.CreateOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.OrderSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error, product not available, or invalid customization",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/guest": {
+            "post": {
+                "description": "Create a new order without authentication. Order can be tracked via the returned order UUID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create a guest order",
+                "parameters": [
+                    {
+                        "description": "Order details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.CreateOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.OrderSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error, product not available, or invalid customization",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/me": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a paginated list of the authenticated user's orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get my orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page (max 100)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Orders retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.OrdersSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/number/{number}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a single order by its order number (e.g., MC-250107-001). Admin only.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get order by order number",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order number (e.g., MC-250107-001)",
+                        "name": "number",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.OrderSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/track/{uuid}": {
+            "get": {
+                "description": "Track an order by its UUID. This is public and used for guest order tracking.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Track a guest order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order UUID",
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.OrderSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid order ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a single order by its UUID. Members can only view their own orders, Admin/Barista can view any order.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get order by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.OrderSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid order ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{id}/payment": {
+            "post": {
+                "description": "Create a Midtrans payment token for an order. Returns a redirect URL and token for Snap payment.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Create payment token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment token created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.PaymentSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid order ID or payment already exists",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{id}/status": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update the status of an order. Admin/Barista only. Status transitions must follow: pending -\u003e preparing -\u003e ready -\u003e completed, or pending -\u003e cancelled.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Update order status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New order status",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.UpdateOrderStatusRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order status updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.OrderSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error, invalid ID format, or invalid status transition",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin/Barista only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products": {
+            "get": {
+                "description": "Get a list of all products with optional filtering",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all products",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Include soft-deleted products",
+                        "name": "include_deleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filter to show only available products",
+                        "name": "available_only",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by category UUID",
+                        "name": "category_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Products retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.ProductsSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid category_id format or category not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new product with optional customizations (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create a new product",
+                "parameters": [
+                    {
+                        "description": "Product details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.CreateProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Product created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.ProductSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error or category not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Product slug already exists",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/customizations/{customizationId}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing product customization by its UUID (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update a product customization",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Customization UUID",
+                        "name": "customizationId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Customization update details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.UpdateCustomizationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customization updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.CustomizationSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error or invalid ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a product customization by its UUID (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete a product customization",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Customization UUID",
+                        "name": "customizationId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customization deleted successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.MessageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid customization ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/slug/{slug}": {
+            "get": {
+                "description": "Get a single product by its URL-friendly slug",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get product by slug",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.ProductSuccessResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "description": "Get a single product by its UUID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get product by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.ProductSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing product by its UUID (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update a product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Product update details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.UpdateProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.ProductSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error, invalid ID format, or category not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Product slug already exists",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Soft delete a product by its UUID (Admin only). Product will be hidden but preserved for historical orders.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Soft delete a product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product deleted successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.MessageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/customizations": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Add a new customization option to a product (Admin only). Product must be marked as customizable.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Add customization to a product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Customization details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.CreateCustomizationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Customization added successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.CustomizationSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error, invalid ID format, or product is not customizable",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerValidationErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/restore": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Restore a previously soft-deleted product by its UUID (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Restore a soft-deleted product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product restored successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.MessageSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product ID format",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin only",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.SwaggerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/webhooks/midtrans": {
+            "post": {
+                "description": "Process payment notification from Midtrans. This endpoint is called by Midtrans when payment status changes.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Webhooks"
+                ],
+                "summary": "Handle Midtrans webhook",
+                "parameters": [
+                    {
+                        "description": "Midtrans notification payload",
+                        "name": "notification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/docs.MidtransWebhookRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Webhook processed successfully",
+                        "schema": {
+                            "$ref": "#/definitions/docs.WebhookSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body or invalid amount",
+                        "schema": {
+                            "$ref": "#/definitions/docs.WebhookErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid signature",
+                        "schema": {
+                            "$ref": "#/definitions/docs.WebhookErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Payment not found",
+                        "schema": {
+                            "$ref": "#/definitions/docs.WebhookErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/docs.WebhookErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "docs.AuthResponse": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIs..."
+                },
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIs..."
+                },
+                "user": {
+                    "$ref": "#/definitions/docs.UserResponse"
+                }
+            }
+        },
+        "docs.AuthSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.AuthResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.CategoriesListResponse": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/docs.CategoryResponse"
+                    }
+                },
+                "count": {
+                    "type": "integer",
+                    "example": 5
+                }
+            }
+        },
+        "docs.CategoriesSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.CategoriesListResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.CategoryResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-01-07T10:00:00Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Delicious matcha beverages"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://example.com/image.jpg"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Matcha Drinks"
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "matcha-drinks"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2025-01-07T10:00:00Z"
+                }
+            }
+        },
+        "docs.CategorySuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.CategoryResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.CreateCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Delicious matcha beverages"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://example.com/image.jpg"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Matcha Drinks"
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "matcha-drinks"
+                }
+            }
+        },
+        "docs.CreateCustomizationRequest": {
+            "type": "object",
+            "properties": {
+                "customization_type": {
+                    "type": "string",
+                    "example": "sweetness"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "option_name": {
+                    "type": "string",
+                    "example": "Less Sugar"
+                },
+                "price_modifier": {
+                    "type": "number",
+                    "example": 0
+                }
+            }
+        },
+        "docs.CreateOrderItemRequest": {
+            "type": "object",
+            "properties": {
+                "customizations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/docs.OrderItemCustomization"
+                    }
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "Extra ice please"
+                },
+                "product_id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 2
+                }
+            }
+        },
+        "docs.CreateOrderRequest": {
+            "type": "object",
+            "properties": {
+                "customer_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/docs.CreateOrderItemRequest"
+                    }
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "Please call when ready"
+                }
+            }
+        },
+        "docs.CreateProductRequest": {
+            "type": "object",
+            "properties": {
+                "base_price": {
+                    "type": "number",
+                    "example": 35000
+                },
+                "category_id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "customizations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/docs.CreateCustomizationRequest"
+                    }
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Creamy matcha latte"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://example.com/matcha.jpg"
+                },
+                "is_available": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_customizable": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Matcha Latte"
+                },
+                "preparation_time": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "matcha-latte"
+                }
+            }
+        },
+        "docs.CustomizationResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-01-07T10:00:00Z"
+                },
+                "customization_type": {
+                    "type": "string",
+                    "example": "sweetness"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "option_name": {
+                    "type": "string",
+                    "example": "Less Sugar"
+                },
+                "price_modifier": {
+                    "type": "number",
+                    "example": 0
+                }
+            }
+        },
+        "docs.CustomizationSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.CustomizationResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "password123"
+                }
+            }
+        },
+        "docs.LogoutRequest": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIs..."
+                }
+            }
+        },
+        "docs.MeResponse": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/docs.UserResponse"
+                }
+            }
+        },
+        "docs.MeSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.MeResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Operation completed successfully"
+                }
+            }
+        },
+        "docs.MessageSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.MessageResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.MidtransWebhookRequest": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string",
+                    "example": "IDR"
+                },
+                "fraud_status": {
+                    "type": "string",
+                    "example": "accept"
+                },
+                "gross_amount": {
+                    "type": "string",
+                    "example": "77000.00"
+                },
+                "merchant_id": {
+                    "type": "string",
+                    "example": "G123456789"
+                },
+                "order_id": {
+                    "type": "string",
+                    "example": "MC-250107-001-1234567890"
+                },
+                "payment_type": {
+                    "type": "string",
+                    "example": "gopay"
+                },
+                "settlement_time": {
+                    "type": "string",
+                    "example": "2025-01-07 10:05:00"
+                },
+                "signature_key": {
+                    "type": "string",
+                    "example": "..."
+                },
+                "status_code": {
+                    "type": "string",
+                    "example": "200"
+                },
+                "status_message": {
+                    "type": "string",
+                    "example": "Success"
+                },
+                "transaction_id": {
+                    "type": "string",
+                    "example": "1234567890"
+                },
+                "transaction_status": {
+                    "type": "string",
+                    "example": "settlement"
+                },
+                "transaction_time": {
+                    "type": "string",
+                    "example": "2025-01-07 10:00:00"
+                }
+            }
+        },
+        "docs.OrderItemCustomization": {
+            "type": "object",
+            "properties": {
+                "customization_id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "option_name": {
+                    "type": "string",
+                    "example": "Less Sugar"
+                }
+            }
+        },
+        "docs.OrderItemResponse": {
+            "type": "object",
+            "properties": {
+                "customizations": {},
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "Extra ice"
+                },
+                "product_name": {
+                    "type": "string",
+                    "example": "Matcha Latte"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "subtotal": {
+                    "type": "number",
+                    "example": 70000
+                },
+                "unit_price": {
+                    "type": "number",
+                    "example": 35000
+                }
+            }
+        },
+        "docs.OrderListResponse": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer",
+                    "example": 20
+                },
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/docs.OrderResponse"
+                    }
+                },
+                "page": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "total": {
+                    "type": "integer",
+                    "example": 100
+                }
+            }
+        },
+        "docs.OrderResponse": {
+            "type": "object",
+            "properties": {
+                "completed_at": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-01-07T10:00:00Z"
+                },
+                "customer_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/docs.OrderItemResponse"
+                    }
+                },
+                "notes": {
+                    "type": "string",
+                    "example": "Please call when ready"
+                },
+                "order_number": {
+                    "type": "string",
+                    "example": "MC-250107-001"
+                },
+                "order_source": {
+                    "type": "string",
+                    "example": "member"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "pending"
+                },
+                "subtotal": {
+                    "type": "number",
+                    "example": 70000
+                },
+                "tax": {
+                    "type": "number",
+                    "example": 7000
+                },
+                "total": {
+                    "type": "number",
+                    "example": 77000
+                },
+                "user": {
+                    "$ref": "#/definitions/docs.UserSummary"
+                }
+            }
+        },
+        "docs.OrderSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.OrderResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.OrdersSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.OrderListResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.PaymentSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.PaymentTokenResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.PaymentTokenResponse": {
+            "type": "object",
+            "properties": {
+                "payment_id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "redirect_url": {
+                    "type": "string",
+                    "example": "https://app.sandbox.midtrans.com/snap/v2/vtweb/..."
+                },
+                "token": {
+                    "type": "string",
+                    "example": "66e4fa55-fdac-4ef9-91b5-733b97d1b862"
+                }
+            }
+        },
+        "docs.ProductResponse": {
+            "type": "object",
+            "properties": {
+                "base_price": {
+                    "type": "number",
+                    "example": 35000
+                },
+                "category": {
+                    "$ref": "#/definitions/docs.CategoryResponse"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-01-07T10:00:00Z"
+                },
+                "customizations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/docs.CustomizationResponse"
+                    }
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Creamy matcha latte"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://example.com/matcha.jpg"
+                },
+                "is_available": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_customizable": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Matcha Latte"
+                },
+                "preparation_time": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "matcha-latte"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2025-01-07T10:00:00Z"
+                }
+            }
+        },
+        "docs.ProductSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.ProductResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.ProductsListResponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/docs.ProductResponse"
+                    }
+                }
+            }
+        },
+        "docs.ProductsSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/docs.ProductsListResponse"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "docs.RefreshTokenRequest": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIs..."
+                }
+            }
+        },
+        "docs.RegisterRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "password123"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+6281234567890"
+                }
+            }
+        },
+        "docs.SwaggerErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Error message"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "docs.SwaggerValidationErrorResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "error": {
+                    "type": "string",
+                    "example": "Validation failed"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "docs.UpdateCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Updated description"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://example.com/image.jpg"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Matcha Drinks Updated"
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "matcha-drinks-updated"
+                }
+            }
+        },
+        "docs.UpdateCustomizationRequest": {
+            "type": "object",
+            "properties": {
+                "customization_type": {
+                    "type": "string",
+                    "example": "sweetness"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "option_name": {
+                    "type": "string",
+                    "example": "Extra Sugar"
+                },
+                "price_modifier": {
+                    "type": "number",
+                    "example": 5000
+                }
+            }
+        },
+        "docs.UpdateOrderStatusRequest": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "pending",
+                        "preparing",
+                        "ready",
+                        "completed",
+                        "cancelled"
+                    ],
+                    "example": "preparing"
+                }
+            }
+        },
+        "docs.UpdateProductRequest": {
+            "type": "object",
+            "properties": {
+                "base_price": {
+                    "type": "number",
+                    "example": 40000
+                },
+                "category_id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Premium matcha latte"
+                },
+                "display_order": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://example.com/matcha.jpg"
+                },
+                "is_available": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_customizable": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Matcha Latte Premium"
+                },
+                "preparation_time": {
+                    "type": "integer",
+                    "example": 7
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "matcha-latte-premium"
+                }
+            }
+        },
+        "docs.UserResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+6281234567890"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "member"
+                }
+            }
+        },
+        "docs.UserSummary": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "john@example.com"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                }
+            }
+        },
+        "docs.WebhookErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Error message"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "docs.WebhookSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Enter your bearer token in the format: Bearer {token}",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "tags": [
+        {
+            "description": "Authentication endpoints for user registration, login, and token management",
+            "name": "Auth"
+        },
+        {
+            "description": "Category management endpoints for organizing products",
+            "name": "Categories"
+        },
+        {
+            "description": "Product management endpoints including customizations",
+            "name": "Products"
+        },
+        {
+            "description": "Order management endpoints for creating and tracking orders",
+            "name": "Orders"
+        },
+        {
+            "description": "Payment endpoints for Midtrans integration",
+            "name": "Payments"
+        },
+        {
+            "description": "Webhook endpoints for payment notifications",
+            "name": "Webhooks"
+        }
+    ]
+}

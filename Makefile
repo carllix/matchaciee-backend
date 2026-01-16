@@ -1,4 +1,4 @@
-.PHONY: help run build test clean dev migrate-up migrate-down migrate-create migrate-version migrate-drop migrate-force
+.PHONY: help run build test clean dev migrate-up migrate-down migrate-create migrate-version migrate-drop migrate-force swagger swagger-fmt
 
 # Variables
 APP_NAME=matchaciee-api
@@ -19,6 +19,10 @@ help:
 	@echo "  make vet             - Run go vet"
 	@echo "  make lint            - Run linter"
 	@echo "  make ci              - Run all CI checks (lint, vet, test)"
+	@echo ""
+	@echo "Documentation:"
+	@echo "  make swagger         - Generate Swagger documentation"
+	@echo "  make swagger-fmt     - Format Swagger annotations"
 	@echo ""
 	@echo "Database Migrations:"
 	@echo "  make migrate-up      - Run all pending migrations"
@@ -95,12 +99,25 @@ lint:
 ci: lint vet test
 	@echo "CI checks passed!"
 
+# Generate Swagger documentation
+swagger:
+	@echo "Generating Swagger documentation..."
+	@swag init -g cmd/api/main.go -o docs --parseDependency --parseInternal
+	@echo "Swagger documentation generated in docs/"
+
+# Format Swagger annotations
+swagger-fmt:
+	@echo "Formatting Swagger annotations..."
+	@swag fmt
+	@echo "Swagger annotations formatted"
+
 # Install development tools
 install-tools:
 	@echo "Installing development tools..."
 	@go install github.com/air-verse/air@latest
 	@go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	@go install github.com/swaggo/swag/cmd/swag@latest
 	@echo "Tools installed successfully"
 
 # Docker commands

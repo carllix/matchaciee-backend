@@ -1,0 +1,1894 @@
+basePath: /api/v1
+definitions:
+  docs.AuthResponse:
+    properties:
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIs...
+        type: string
+      token:
+        example: eyJhbGciOiJIUzI1NiIs...
+        type: string
+      user:
+        $ref: '#/definitions/docs.UserResponse'
+    type: object
+  docs.AuthSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.AuthResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.CategoriesListResponse:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/docs.CategoryResponse'
+        type: array
+      count:
+        example: 5
+        type: integer
+    type: object
+  docs.CategoriesSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.CategoriesListResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.CategoryResponse:
+    properties:
+      created_at:
+        example: "2025-01-07T10:00:00Z"
+        type: string
+      description:
+        example: Delicious matcha beverages
+        type: string
+      display_order:
+        example: 1
+        type: integer
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      image_url:
+        example: https://example.com/image.jpg
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      name:
+        example: Matcha Drinks
+        type: string
+      slug:
+        example: matcha-drinks
+        type: string
+      updated_at:
+        example: "2025-01-07T10:00:00Z"
+        type: string
+    type: object
+  docs.CategorySuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.CategoryResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.CreateCategoryRequest:
+    properties:
+      description:
+        example: Delicious matcha beverages
+        type: string
+      display_order:
+        example: 1
+        type: integer
+      image_url:
+        example: https://example.com/image.jpg
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      name:
+        example: Matcha Drinks
+        type: string
+      slug:
+        example: matcha-drinks
+        type: string
+    type: object
+  docs.CreateCustomizationRequest:
+    properties:
+      customization_type:
+        example: sweetness
+        type: string
+      display_order:
+        example: 1
+        type: integer
+      option_name:
+        example: Less Sugar
+        type: string
+      price_modifier:
+        example: 0
+        type: number
+    type: object
+  docs.CreateOrderItemRequest:
+    properties:
+      customizations:
+        items:
+          $ref: '#/definitions/docs.OrderItemCustomization'
+        type: array
+      notes:
+        example: Extra ice please
+        type: string
+      product_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      quantity:
+        example: 2
+        type: integer
+    type: object
+  docs.CreateOrderRequest:
+    properties:
+      customer_name:
+        example: John Doe
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/docs.CreateOrderItemRequest'
+        type: array
+      notes:
+        example: Please call when ready
+        type: string
+    type: object
+  docs.CreateProductRequest:
+    properties:
+      base_price:
+        example: 35000
+        type: number
+      category_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      customizations:
+        items:
+          $ref: '#/definitions/docs.CreateCustomizationRequest'
+        type: array
+      description:
+        example: Creamy matcha latte
+        type: string
+      display_order:
+        example: 1
+        type: integer
+      image_url:
+        example: https://example.com/matcha.jpg
+        type: string
+      is_available:
+        example: true
+        type: boolean
+      is_customizable:
+        example: true
+        type: boolean
+      name:
+        example: Matcha Latte
+        type: string
+      preparation_time:
+        example: 5
+        type: integer
+      slug:
+        example: matcha-latte
+        type: string
+    type: object
+  docs.CustomizationResponse:
+    properties:
+      created_at:
+        example: "2025-01-07T10:00:00Z"
+        type: string
+      customization_type:
+        example: sweetness
+        type: string
+      display_order:
+        example: 1
+        type: integer
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      option_name:
+        example: Less Sugar
+        type: string
+      price_modifier:
+        example: 0
+        type: number
+    type: object
+  docs.CustomizationSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.CustomizationResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.LoginRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: password123
+        type: string
+    type: object
+  docs.LogoutRequest:
+    properties:
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIs...
+        type: string
+    type: object
+  docs.MeResponse:
+    properties:
+      user:
+        $ref: '#/definitions/docs.UserResponse'
+    type: object
+  docs.MeSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.MeResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.MessageResponse:
+    properties:
+      message:
+        example: Operation completed successfully
+        type: string
+    type: object
+  docs.MessageSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.MessageResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.MidtransWebhookRequest:
+    properties:
+      currency:
+        example: IDR
+        type: string
+      fraud_status:
+        example: accept
+        type: string
+      gross_amount:
+        example: "77000.00"
+        type: string
+      merchant_id:
+        example: G123456789
+        type: string
+      order_id:
+        example: MC-250107-001-1234567890
+        type: string
+      payment_type:
+        example: gopay
+        type: string
+      settlement_time:
+        example: "2025-01-07 10:05:00"
+        type: string
+      signature_key:
+        example: '...'
+        type: string
+      status_code:
+        example: "200"
+        type: string
+      status_message:
+        example: Success
+        type: string
+      transaction_id:
+        example: "1234567890"
+        type: string
+      transaction_status:
+        example: settlement
+        type: string
+      transaction_time:
+        example: "2025-01-07 10:00:00"
+        type: string
+    type: object
+  docs.OrderItemCustomization:
+    properties:
+      customization_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      option_name:
+        example: Less Sugar
+        type: string
+    type: object
+  docs.OrderItemResponse:
+    properties:
+      customizations: {}
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      notes:
+        example: Extra ice
+        type: string
+      product_name:
+        example: Matcha Latte
+        type: string
+      quantity:
+        example: 2
+        type: integer
+      subtotal:
+        example: 70000
+        type: number
+      unit_price:
+        example: 35000
+        type: number
+    type: object
+  docs.OrderListResponse:
+    properties:
+      limit:
+        example: 20
+        type: integer
+      orders:
+        items:
+          $ref: '#/definitions/docs.OrderResponse'
+        type: array
+      page:
+        example: 1
+        type: integer
+      total:
+        example: 100
+        type: integer
+    type: object
+  docs.OrderResponse:
+    properties:
+      completed_at:
+        type: string
+      created_at:
+        example: "2025-01-07T10:00:00Z"
+        type: string
+      customer_name:
+        example: John Doe
+        type: string
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/docs.OrderItemResponse'
+        type: array
+      notes:
+        example: Please call when ready
+        type: string
+      order_number:
+        example: MC-250107-001
+        type: string
+      order_source:
+        example: member
+        type: string
+      status:
+        example: pending
+        type: string
+      subtotal:
+        example: 70000
+        type: number
+      tax:
+        example: 7000
+        type: number
+      total:
+        example: 77000
+        type: number
+      user:
+        $ref: '#/definitions/docs.UserSummary'
+    type: object
+  docs.OrderSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.OrderResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.OrdersSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.OrderListResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.PaymentSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.PaymentTokenResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.PaymentTokenResponse:
+    properties:
+      payment_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      redirect_url:
+        example: https://app.sandbox.midtrans.com/snap/v2/vtweb/...
+        type: string
+      token:
+        example: 66e4fa55-fdac-4ef9-91b5-733b97d1b862
+        type: string
+    type: object
+  docs.ProductResponse:
+    properties:
+      base_price:
+        example: 35000
+        type: number
+      category:
+        $ref: '#/definitions/docs.CategoryResponse'
+      created_at:
+        example: "2025-01-07T10:00:00Z"
+        type: string
+      customizations:
+        items:
+          $ref: '#/definitions/docs.CustomizationResponse'
+        type: array
+      deleted_at:
+        type: string
+      description:
+        example: Creamy matcha latte
+        type: string
+      display_order:
+        example: 1
+        type: integer
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      image_url:
+        example: https://example.com/matcha.jpg
+        type: string
+      is_available:
+        example: true
+        type: boolean
+      is_customizable:
+        example: true
+        type: boolean
+      name:
+        example: Matcha Latte
+        type: string
+      preparation_time:
+        example: 5
+        type: integer
+      slug:
+        example: matcha-latte
+        type: string
+      updated_at:
+        example: "2025-01-07T10:00:00Z"
+        type: string
+    type: object
+  docs.ProductSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.ProductResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.ProductsListResponse:
+    properties:
+      count:
+        example: 10
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/docs.ProductResponse'
+        type: array
+    type: object
+  docs.ProductsSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/docs.ProductsListResponse'
+      success:
+        example: true
+        type: boolean
+    type: object
+  docs.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIs...
+        type: string
+    type: object
+  docs.RegisterRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      full_name:
+        example: John Doe
+        type: string
+      password:
+        example: password123
+        type: string
+      phone:
+        example: "+6281234567890"
+        type: string
+    type: object
+  docs.SwaggerErrorResponse:
+    properties:
+      error:
+        example: Error message
+        type: string
+      success:
+        example: false
+        type: boolean
+    type: object
+  docs.SwaggerValidationErrorResponse:
+    properties:
+      details:
+        additionalProperties:
+          type: string
+        type: object
+      error:
+        example: Validation failed
+        type: string
+      success:
+        example: false
+        type: boolean
+    type: object
+  docs.UpdateCategoryRequest:
+    properties:
+      description:
+        example: Updated description
+        type: string
+      display_order:
+        example: 2
+        type: integer
+      image_url:
+        example: https://example.com/image.jpg
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      name:
+        example: Matcha Drinks Updated
+        type: string
+      slug:
+        example: matcha-drinks-updated
+        type: string
+    type: object
+  docs.UpdateCustomizationRequest:
+    properties:
+      customization_type:
+        example: sweetness
+        type: string
+      display_order:
+        example: 2
+        type: integer
+      option_name:
+        example: Extra Sugar
+        type: string
+      price_modifier:
+        example: 5000
+        type: number
+    type: object
+  docs.UpdateOrderStatusRequest:
+    properties:
+      status:
+        enum:
+        - pending
+        - preparing
+        - ready
+        - completed
+        - cancelled
+        example: preparing
+        type: string
+    type: object
+  docs.UpdateProductRequest:
+    properties:
+      base_price:
+        example: 40000
+        type: number
+      category_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      description:
+        example: Premium matcha latte
+        type: string
+      display_order:
+        example: 2
+        type: integer
+      image_url:
+        example: https://example.com/matcha.jpg
+        type: string
+      is_available:
+        example: true
+        type: boolean
+      is_customizable:
+        example: true
+        type: boolean
+      name:
+        example: Matcha Latte Premium
+        type: string
+      preparation_time:
+        example: 7
+        type: integer
+      slug:
+        example: matcha-latte-premium
+        type: string
+    type: object
+  docs.UserResponse:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      full_name:
+        example: John Doe
+        type: string
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      phone:
+        example: "+6281234567890"
+        type: string
+      role:
+        example: member
+        type: string
+    type: object
+  docs.UserSummary:
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      full_name:
+        example: John Doe
+        type: string
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+    type: object
+  docs.WebhookErrorResponse:
+    properties:
+      message:
+        example: Error message
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  docs.WebhookSuccessResponse:
+    properties:
+      status:
+        example: success
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Matchaciee Backend API
+  title: Matchaciee API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user with email and password
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/docs.AuthSuccessResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Invalid email or password
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: User account is inactive
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Login user
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Invalidate the refresh token to logout the user
+      parameters:
+      - description: Refresh token to invalidate
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.LogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Logged out successfully
+          schema:
+            $ref: '#/definitions/docs.MessageSuccessResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Invalid refresh token
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Logout user
+      tags:
+      - Auth
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Get the authenticated user's profile information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.MeSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current user profile
+      tags:
+      - Auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Get a new access token using a valid refresh token
+      parameters:
+      - description: Refresh token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token refreshed successfully
+          schema:
+            $ref: '#/definitions/docs.AuthSuccessResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Invalid or expired refresh token
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: User account is inactive
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Refresh access token
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user account with email and password
+      parameters:
+      - description: Registration details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User registered successfully
+          schema:
+            $ref: '#/definitions/docs.AuthSuccessResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "409":
+          description: Email already exists
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Register a new user
+      tags:
+      - Auth
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all categories with optional filtering
+      parameters:
+      - description: Filter to show only active categories
+        in: query
+        name: active_only
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Categories retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.CategoriesSuccessResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Get all categories
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: Create a new product category (Admin only)
+      parameters:
+      - description: Category details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Category created successfully
+          schema:
+            $ref: '#/definitions/docs.CategorySuccessResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "409":
+          description: Category slug already exists
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new category
+      tags:
+      - Categories
+  /categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a category by its UUID (Admin only)
+      parameters:
+      - description: Category UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category deleted successfully
+          schema:
+            $ref: '#/definitions/docs.MessageSuccessResponse'
+        "400":
+          description: Invalid category ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Category not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a category
+      tags:
+      - Categories
+    get:
+      consumes:
+      - application/json
+      description: Get a single category by its UUID
+      parameters:
+      - description: Category UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.CategorySuccessResponse'
+        "400":
+          description: Invalid category ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Category not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Get category by ID
+      tags:
+      - Categories
+    put:
+      consumes:
+      - application/json
+      description: Update an existing category by its UUID (Admin only)
+      parameters:
+      - description: Category UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category update details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category updated successfully
+          schema:
+            $ref: '#/definitions/docs.CategorySuccessResponse'
+        "400":
+          description: Validation error or invalid ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Category not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "409":
+          description: Category slug already exists
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a category
+      tags:
+      - Categories
+  /categories/slug/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Get a single category by its URL-friendly slug
+      parameters:
+      - description: Category slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.CategorySuccessResponse'
+        "404":
+          description: Category not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Get category by slug
+      tags:
+      - Categories
+  /orders:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of all orders with optional filtering. Admin/Barista
+        only.
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Items per page (max 100)
+        in: query
+        name: limit
+        type: integer
+      - description: Filter by order status
+        enum:
+        - pending
+        - preparing
+        - ready
+        - completed
+        - cancelled
+        in: query
+        name: status
+        type: string
+      - description: Filter by order source
+        enum:
+        - guest
+        - member
+        - kiosk
+        in: query
+        name: source
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Orders retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.OrdersSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin/Barista only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all orders
+      tags:
+      - Orders
+    post:
+      consumes:
+      - application/json
+      description: Create a new order for an authenticated member user
+      parameters:
+      - description: Order details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.CreateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Order created successfully
+          schema:
+            $ref: '#/definitions/docs.OrderSuccessResponse'
+        "400":
+          description: Validation error, product not available, or invalid customization
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create an order (authenticated)
+      tags:
+      - Orders
+  /orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a single order by its UUID. Members can only view their own
+        orders, Admin/Barista can view any order.
+      parameters:
+      - description: Order UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.OrderSuccessResponse'
+        "400":
+          description: Invalid order ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Access denied
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get order by ID
+      tags:
+      - Orders
+  /orders/{id}/payment:
+    post:
+      consumes:
+      - application/json
+      description: Create a Midtrans payment token for an order. Returns a redirect
+        URL and token for Snap payment.
+      parameters:
+      - description: Order UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Payment token created successfully
+          schema:
+            $ref: '#/definitions/docs.PaymentSuccessResponse'
+        "400":
+          description: Invalid order ID or payment already exists
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Create payment token
+      tags:
+      - Payments
+  /orders/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: 'Update the status of an order. Admin/Barista only. Status transitions
+        must follow: pending -> preparing -> ready -> completed, or pending -> cancelled.'
+      parameters:
+      - description: Order UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: New order status
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.UpdateOrderStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order status updated successfully
+          schema:
+            $ref: '#/definitions/docs.OrderSuccessResponse'
+        "400":
+          description: Validation error, invalid ID format, or invalid status transition
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin/Barista only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update order status
+      tags:
+      - Orders
+  /orders/guest:
+    post:
+      consumes:
+      - application/json
+      description: Create a new order without authentication. Order can be tracked
+        via the returned order UUID.
+      parameters:
+      - description: Order details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.CreateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Order created successfully
+          schema:
+            $ref: '#/definitions/docs.OrderSuccessResponse'
+        "400":
+          description: Validation error, product not available, or invalid customization
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Create a guest order
+      tags:
+      - Orders
+  /orders/me:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of the authenticated user's orders
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page (max 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Orders retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.OrdersSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get my orders
+      tags:
+      - Orders
+  /orders/number/{number}:
+    get:
+      consumes:
+      - application/json
+      description: Get a single order by its order number (e.g., MC-250107-001). Admin
+        only.
+      parameters:
+      - description: Order number (e.g., MC-250107-001)
+        in: path
+        name: number
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.OrderSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get order by order number
+      tags:
+      - Orders
+  /orders/track/{uuid}:
+    get:
+      consumes:
+      - application/json
+      description: Track an order by its UUID. This is public and used for guest order
+        tracking.
+      parameters:
+      - description: Order UUID
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.OrderSuccessResponse'
+        "400":
+          description: Invalid order ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Track a guest order
+      tags:
+      - Orders
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all products with optional filtering
+      parameters:
+      - description: Include soft-deleted products
+        in: query
+        name: include_deleted
+        type: boolean
+      - description: Filter to show only available products
+        in: query
+        name: available_only
+        type: boolean
+      - description: Filter by category UUID
+        in: query
+        name: category_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Products retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.ProductsSuccessResponse'
+        "400":
+          description: Invalid category_id format or category not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Get all products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Create a new product with optional customizations (Admin only)
+      parameters:
+      - description: Product details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Product created successfully
+          schema:
+            $ref: '#/definitions/docs.ProductSuccessResponse'
+        "400":
+          description: Validation error or category not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "409":
+          description: Product slug already exists
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new product
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Soft delete a product by its UUID (Admin only). Product will be
+        hidden but preserved for historical orders.
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product deleted successfully
+          schema:
+            $ref: '#/definitions/docs.MessageSuccessResponse'
+        "400":
+          description: Invalid product ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Product not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Soft delete a product
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: Get a single product by its UUID
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.ProductSuccessResponse'
+        "400":
+          description: Invalid product ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Product not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Get product by ID
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: Update an existing product by its UUID (Admin only)
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product update details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product updated successfully
+          schema:
+            $ref: '#/definitions/docs.ProductSuccessResponse'
+        "400":
+          description: Validation error, invalid ID format, or category not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Product not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "409":
+          description: Product slug already exists
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a product
+      tags:
+      - Products
+  /products/{id}/customizations:
+    post:
+      consumes:
+      - application/json
+      description: Add a new customization option to a product (Admin only). Product
+        must be marked as customizable.
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Customization details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.CreateCustomizationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Customization added successfully
+          schema:
+            $ref: '#/definitions/docs.CustomizationSuccessResponse'
+        "400":
+          description: Validation error, invalid ID format, or product is not customizable
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Product not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Add customization to a product
+      tags:
+      - Products
+  /products/{id}/restore:
+    post:
+      consumes:
+      - application/json
+      description: Restore a previously soft-deleted product by its UUID (Admin only)
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product restored successfully
+          schema:
+            $ref: '#/definitions/docs.MessageSuccessResponse'
+        "400":
+          description: Invalid product ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "404":
+          description: Product not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Restore a soft-deleted product
+      tags:
+      - Products
+  /products/customizations/{customizationId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product customization by its UUID (Admin only)
+      parameters:
+      - description: Customization UUID
+        in: path
+        name: customizationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Customization deleted successfully
+          schema:
+            $ref: '#/definitions/docs.MessageSuccessResponse'
+        "400":
+          description: Invalid customization ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a product customization
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: Update an existing product customization by its UUID (Admin only)
+      parameters:
+      - description: Customization UUID
+        in: path
+        name: customizationId
+        required: true
+        type: string
+      - description: Customization update details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/docs.UpdateCustomizationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Customization updated successfully
+          schema:
+            $ref: '#/definitions/docs.CustomizationSuccessResponse'
+        "400":
+          description: Validation error or invalid ID format
+          schema:
+            $ref: '#/definitions/docs.SwaggerValidationErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "403":
+          description: Forbidden - Admin only
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a product customization
+      tags:
+      - Products
+  /products/slug/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Get a single product by its URL-friendly slug
+      parameters:
+      - description: Product slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product retrieved successfully
+          schema:
+            $ref: '#/definitions/docs.ProductSuccessResponse'
+        "404":
+          description: Product not found
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.SwaggerErrorResponse'
+      summary: Get product by slug
+      tags:
+      - Products
+  /webhooks/midtrans:
+    post:
+      consumes:
+      - application/json
+      description: Process payment notification from Midtrans. This endpoint is called
+        by Midtrans when payment status changes.
+      parameters:
+      - description: Midtrans notification payload
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/docs.MidtransWebhookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Webhook processed successfully
+          schema:
+            $ref: '#/definitions/docs.WebhookSuccessResponse'
+        "400":
+          description: Invalid request body or invalid amount
+          schema:
+            $ref: '#/definitions/docs.WebhookErrorResponse'
+        "401":
+          description: Invalid signature
+          schema:
+            $ref: '#/definitions/docs.WebhookErrorResponse'
+        "404":
+          description: Payment not found
+          schema:
+            $ref: '#/definitions/docs.WebhookErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/docs.WebhookErrorResponse'
+      summary: Handle Midtrans webhook
+      tags:
+      - Webhooks
+securityDefinitions:
+  BearerAuth:
+    description: 'Enter your bearer token in the format: Bearer {token}'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
+tags:
+- description: Authentication endpoints for user registration, login, and token management
+  name: Auth
+- description: Category management endpoints for organizing products
+  name: Categories
+- description: Product management endpoints including customizations
+  name: Products
+- description: Order management endpoints for creating and tracking orders
+  name: Orders
+- description: Payment endpoints for Midtrans integration
+  name: Payments
+- description: Webhook endpoints for payment notifications
+  name: Webhooks
