@@ -8,6 +8,7 @@ import (
 	"strings"
 	"syscall"
 
+	_ "github.com/carllix/matchaciee-backend/docs"
 	"github.com/carllix/matchaciee-backend/internal/config"
 	"github.com/carllix/matchaciee-backend/internal/database"
 	"github.com/carllix/matchaciee-backend/internal/handlers"
@@ -19,7 +20,37 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/swagger"
 )
+
+// @title Matchaciee API
+// @version 1.0
+// @description Matchaciee Backend API
+
+// @BasePath /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Enter your bearer token in the format: Bearer {token}
+
+// @tag.name Auth
+// @tag.description Authentication endpoints for user registration, login, and token management
+
+// @tag.name Categories
+// @tag.description Category management endpoints for organizing products
+
+// @tag.name Products
+// @tag.description Product management endpoints including customizations
+
+// @tag.name Orders
+// @tag.description Order management endpoints for creating and tracking orders
+
+// @tag.name Payments
+// @tag.description Payment endpoints for Midtrans integration
+
+// @tag.name Webhooks
+// @tag.description Webhook endpoints for payment notifications
 
 func main() {
 	// Load configuration
@@ -79,6 +110,9 @@ func main() {
 			"version": "v1.0.0",
 		})
 	})
+
+	// Swagger documentation
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	// Initialize dependencies
 	db := database.GetDB()

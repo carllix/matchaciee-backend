@@ -3,6 +3,7 @@ package handlers
 import (
 	"errors"
 
+	_ "github.com/carllix/matchaciee-backend/docs"
 	"github.com/carllix/matchaciee-backend/internal/repositories"
 	"github.com/carllix/matchaciee-backend/internal/services"
 	"github.com/carllix/matchaciee-backend/internal/utils"
@@ -20,6 +21,18 @@ func NewAuthHandler(authService services.AuthService) *AuthHandler {
 	}
 }
 
+// Register godoc
+// @Summary Register a new user
+// @Description Register a new user account with email and password
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body docs.RegisterRequest true "Registration details"
+// @Success 201 {object} docs.AuthSuccessResponse "User registered successfully"
+// @Failure 400 {object} docs.SwaggerValidationErrorResponse "Validation error"
+// @Failure 409 {object} docs.SwaggerErrorResponse "Email already exists"
+// @Failure 500 {object} docs.SwaggerErrorResponse "Internal server error"
+// @Router /auth/register [post]
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var req services.RegisterRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -43,6 +56,19 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	return utils.SuccessResponse(c, fiber.StatusCreated, authResp)
 }
 
+// Login godoc
+// @Summary Login user
+// @Description Authenticate user with email and password
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body docs.LoginRequest true "Login credentials"
+// @Success 200 {object} docs.AuthSuccessResponse "Login successful"
+// @Failure 400 {object} docs.SwaggerValidationErrorResponse "Validation error"
+// @Failure 401 {object} docs.SwaggerErrorResponse "Invalid email or password"
+// @Failure 403 {object} docs.SwaggerErrorResponse "User account is inactive"
+// @Failure 500 {object} docs.SwaggerErrorResponse "Internal server error"
+// @Router /auth/login [post]
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var req services.LoginRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -69,6 +95,18 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	return utils.SuccessResponse(c, fiber.StatusOK, authResp)
 }
 
+// GetMe godoc
+// @Summary Get current user profile
+// @Description Get the authenticated user's profile information
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} docs.MeSuccessResponse "User profile retrieved successfully"
+// @Failure 401 {object} docs.SwaggerErrorResponse "Unauthorized"
+// @Failure 404 {object} docs.SwaggerErrorResponse "User not found"
+// @Failure 500 {object} docs.SwaggerErrorResponse "Internal server error"
+// @Router /auth/me [get]
 func (h *AuthHandler) GetMe(c *fiber.Ctx) error {
 	// Get user UUID from context
 	userUUID := c.Locals("userUUID")
@@ -95,6 +133,19 @@ func (h *AuthHandler) GetMe(c *fiber.Ctx) error {
 	})
 }
 
+// RefreshToken godoc
+// @Summary Refresh access token
+// @Description Get a new access token using a valid refresh token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body docs.RefreshTokenRequest true "Refresh token"
+// @Success 200 {object} docs.AuthSuccessResponse "Token refreshed successfully"
+// @Failure 400 {object} docs.SwaggerValidationErrorResponse "Validation error"
+// @Failure 401 {object} docs.SwaggerErrorResponse "Invalid or expired refresh token"
+// @Failure 403 {object} docs.SwaggerErrorResponse "User account is inactive"
+// @Failure 500 {object} docs.SwaggerErrorResponse "Internal server error"
+// @Router /auth/refresh [post]
 func (h *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	var req services.RefreshTokenRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -121,6 +172,18 @@ func (h *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	return utils.SuccessResponse(c, fiber.StatusOK, authResp)
 }
 
+// Logout godoc
+// @Summary Logout user
+// @Description Invalidate the refresh token to logout the user
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body docs.LogoutRequest true "Refresh token to invalidate"
+// @Success 200 {object} docs.MessageSuccessResponse "Logged out successfully"
+// @Failure 400 {object} docs.SwaggerValidationErrorResponse "Validation error"
+// @Failure 401 {object} docs.SwaggerErrorResponse "Invalid refresh token"
+// @Failure 500 {object} docs.SwaggerErrorResponse "Internal server error"
+// @Router /auth/logout [post]
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
 	var req struct {
 		RefreshToken string `json:"refresh_token" validate:"required"`
